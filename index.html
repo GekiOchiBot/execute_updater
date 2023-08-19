@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="style.css">
+<head>
+    <title>execute updater</title>
+</head>
+<body>
+    <h1>execute updater</h1>
+    <h2>旧executeを新しい物に変換します。</h2>
+
+    <textarea placeholder="ここに旧executeを入力" style="width: 600px; height: 50px;" id="text"></textarea>
+    <input type="button" onclick="split()" value="実行">
+    <p id="p"></p>
+    <script>
+
+        let subCommands =[
+        "as",
+        "at",
+        "positioned",
+        "run",
+        "if",
+        "unless",
+        "rotated",
+        "facing",
+        "align",
+        "anchored",
+        "in"
+        ]
+
+        let selectors = [
+            "@a",
+            "@e",
+            "@p",
+            "@r",
+            "@s",
+            "@initiator"
+        ]
+
+
+        function split(){
+            let p = document.getElementById("p")
+            let text = document.getElementById('text').value
+            let str = text.split('/').join('');
+            str = str.split('~').join(" ~");
+            str = str.split('  ').join(' ');
+            str = str.split(' ');
+            let out = str
+
+            for (let i = 0; i < str.length; i++) {
+                if (subCommands.indexOf(str[i]) != -1) {
+                    console.log("unchi");
+                    error("コマンドが新executeです");
+                    return;
+                }
+            }
+
+            //コマンドがexecuteかどうか
+            if (str[0] == "execute") {
+                    
+                    //セレクターがあるかどうか
+                    if (selectors.indexOf(str[1]) == -1){
+                            error("構文が間違っています")
+                            return;
+
+                        }
+                        else{
+                            if (str[2] == "~" && str[3] == "~" && str[4] == "~") {
+                                out.splice(2,3,"run");
+                            }
+                            else{
+                                out.splice(2,0,"positioned");
+                                out.splice(6,0,"run");
+                            }
+                            out.splice(1,0,"as");
+
+                            const runPos = str.indexOf('run')
+                            if (str[runPos + 1] == "detect") {
+                                out.splice(runPos,2,"if block")
+                                out.splice(runPos + 5,1,"run")
+                            }
+                            success(out)
+                        }
+
+                }
+            else {
+                error("コマンドがexecuteではありません")
+                return;
+            }
+
+        }
+
+        function success(str){
+            let text = str.toString()
+            text = text.split(',').join(' ')
+            p.innerText = text
+        }
+
+        function error(ertext){
+            p.innerText = ertext
+        }
+    </script>
+</body>
