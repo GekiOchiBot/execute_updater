@@ -66,6 +66,7 @@
                         else{
                             if (str[2] == "~" && str[3] == "~" && str[4] == "~") {
                                 out.splice(2,3,"run");
+                                if (str[2].indexOf("~") != -1 || str[3].indexOf("~") != -1 || str[4].indexOf("~") != -1) out.splice(2,0,"at @s");
                             }
                             else{
                                 out.splice(2,0,"positioned");
