@@ -72,7 +72,8 @@
                                 out.splice(6,0,"run");
                             }
                             out.splice(1,0,"as");
-
+                            if (str[2].indexOf("~") != -1 || str[3].indexOf("~") != -1 || str[4].indexOf("~") != -1) out.splice(3,0,"at @s");
+                            
                             const runPos = str.indexOf('run')
                             if (str[runPos + 1] == "detect") {
                                 out.splice(runPos,2,"if block")
