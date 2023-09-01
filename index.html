@@ -6,25 +6,15 @@
 </head>
 <body>
     <h1>execute updater</h1>
+    <h2>var.2.0</h2>
     <h2>旧executeを新しい物に変換します。</h2>
 
     <textarea placeholder="ここに旧executeを入力" style="width: 600px; height: 50px;" id="text"></textarea>
-    <input type="button" onclick="split()" value="実行">
     <p id="p"></p>
     <script>
 
         let subCommands =[
-        "as",
-        "at",
-        "positioned",
-        "run",
-        "if",
-        "unless",
-        "rotated",
-        "facing",
-        "align",
-        "anchored",
-        "in"
+        "run"
         ]
 
         let selectors = [
@@ -38,11 +28,13 @@
 
 
         function split(){
+
             let p = document.getElementById("p")
             let text = document.getElementById('text').value
             let str = text.split('/').join('');
             str = str.split('~').join(" ~");
             str = str.split('  ').join(' ');
+            str = str.split(',').join('@44&$%#&$%&%MaxOfTERRRRaw33');
             str = str.split(' ');
             let out = str
 
@@ -53,52 +45,81 @@
                 }
             }
 
-            //コマンドがexecuteかどうか
-            if (str[0] == "execute") {
-                    
-                    //セレクターがあるかどうか
-                    if (selectors.indexOf(str[1]) == -1){
-                            error("構文が間違っています")
-                            return;
+            var E
+            if(text.match(/execute/g)) E = text.match(/execute/g)
+            
 
-                        }
-                        else{
-                            if (str[2] == "~" && str[3] == "~" && str[4] == "~") {
-                                out.splice(2,3,"run");
-                                out.splice(2,0,"at @s");
-                            }
-                            else{
-                                out.splice(2,0,"positioned");
-                                out.splice(6,0,"run");
-                            }
-                            out.splice(1,0,"as");
-                            if (str[2].indexOf("~") != -1 || str[3].indexOf("~") != -1 || str[4].indexOf("~") != -1) out.splice(3,0,"at @s");
+
+            const EArray = []
+            var EposGet = str.concat()
+            if (!E) return;
+            for (let i = 0; i < E.length; i++) {
+                const Epos = EposGet.indexOf("execute")
+                EposGet.splice(Epos,1,"n")
+                EArray.splice(EArray.length,0,Epos)
+            }
+
+
+            //繰り返してexecuteを全部正す
+            for (let i = 0; i < E.length; i++) {
+                //コマンドがexecuteかどうか
+                if (str[EArray[i]] == "execute") {
+                                if (str[EArray[i] + 2] == "~" && str[EArray[i] + 3] == "~" && str[EArray[i] + 4] == "~") {
+                                    out.splice(EArray[i] + 2,3,"run");
+                                    out.splice(EArray[i] + 2,0,"at @s");
+                                }
+                                else{
+                                    out.splice(EArray[i] + 2,0,"positioned");
+                                    out.splice(EArray[i] + 6,0,"run");
+                                }
+                                out.splice(EArray[i] + 1,0,"as");
+                                if (str[EArray[i] + 2].indexOf("~") != -1 || str[EArray[i] + 3].indexOf("~") != -1 || str[EArray[i] + 4].indexOf("~") != -1) out.splice(EArray[i] + 3,0,"at @s");
+
+
+                                const runPos = out.indexOf('run',EArray[i])
+                                const translate = 0
+                                if (EArray[i] != 0) {
+                                    out.splice(EArray[i] - 1,2,"")
+                                    if (str[runPos] == "detect") {
+                                        out.splice(runPos-1,2,"if block")
+                                        out.splice(runPos + 6,0,"run")
+                                    }
+                                }
+                                if (str[runPos + 1] == "detect" && EArray[i] == 0) {
+                                    out.splice(runPos,2,"if block")
+                                    out.splice(runPos + 6,0,"run")
+                                }
+
+
+                                success(out)
                             
 
-                            const runPos = str.indexOf('run')
-                            if (str[runPos + 1] == "detect") {
-                                out.splice(runPos,2,"if block")
-                                out.splice(runPos + 5,1,"run")
-                            }
-                            success(out)
-                        }
-
+                    }
+                else {
+                    error("コマンドがexecuteではありません")
+                    return;
                 }
-            else {
-                error("コマンドがexecuteではありません")
-                return;
             }
+            
 
         }
 
         function success(str){
-            let text = str.toString()
+            text = str.toString()
             text = text.split(',').join(' ')
+            text = text.split('@44&$%#&$%&%MaxOfTERRRRaw33').join(',')
             p.innerText = text
         }
 
         function error(ertext){
             p.innerText = ertext
+        }
+
+        window.onload = function(){
+            setInterval(() =>{
+                split()
+            }, 10);
+
         }
     </script>
 </body>
